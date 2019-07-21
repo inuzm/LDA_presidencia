@@ -57,7 +57,7 @@ rm(list = c(
     "discursos_limpios"
 ))
 
-# LDA de 10 temas. Creamos un control para imprimir el avance y modificar la distribución
+# LDA de 20 temas. Creamos un control para imprimir el avance y modificar la distribución
 # inicial, así como correr el algoritmo varias veces y quedarnos con el que tenga la
 # mayor verosimilitud porque en estadística nos dicen que es mejor. 
 # ¯\_(ツ)_/¯
@@ -96,3 +96,21 @@ write.table(
 # esto es lematizar las palabras? 
 
 # MUERTE A TIDYVERSE (nocierto)
+
+# LDA de 10 temas. Creamos un control para imprimir el avance y modificar la distribución
+# inicial, así como correr el algoritmo varias veces y quedarnos con el que tenga la
+# mayor verosimilitud porque en estadística nos dicen que es mejor. 
+# ¯\_(ツ)_/¯
+
+RNGkind("Mars") # Cambiamos el generador de números pseudoaleatorios
+set.seed(95473) # Ponemos la semilla
+
+lda_control <- list(
+    verbose = 1,
+    nstart = 15,
+    alpha = 1/10,
+    seed = rpois(n = 15, rgamma(n = 15, shape = 1, rate = 1/1000)) # YOLO
+)
+
+# Corremos LDA con el control anterior. ヽ(^o^)丿
+lda_discursos <- LDA(x = matriz_discursos, k = 10, control = lda_control)
