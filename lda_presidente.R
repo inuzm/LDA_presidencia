@@ -97,7 +97,7 @@ write.table(
 
 # MUERTE A TIDYVERSE (nocierto)
 
-# LDA de 10 temas. Creamos un control para imprimir el avance y modificar la distribución
+# LDA de 5 temas. Creamos un control para imprimir el avance y modificar la distribución
 # inicial, así como correr el algoritmo varias veces y quedarnos con el que tenga la
 # mayor verosimilitud porque en estadística nos dicen que es mejor. 
 # ¯\_(ツ)_/¯
@@ -108,9 +108,24 @@ set.seed(95473) # Ponemos la semilla
 lda_control <- list(
     verbose = 1,
     nstart = 15,
-    alpha = 1/10,
-    seed = rpois(n = 15, rgamma(n = 15, shape = 1, rate = 1/1000)) # YOLO
+    alpha = 1e-3,
+    seed = rpois(n = 15, rgamma(n = 15, shape = 1, rate = 1/1000)), # YOLO
+    var = list(iter.max = 1e3, tol = 1e-8),
+    em = list(iter.max = 1e4, tol = 1e-8)
 )
 
 # Corremos LDA con el control anterior. ヽ(^o^)丿
-lda_discursos <- LDA(x = matriz_discursos, k = 10, control = lda_control)
+lda_discursos <- LDA(x = matriz_discursos, k = 5, control = lda_control)
+
+# ¿Y si imprimimos las diez palabras más representativas de cada tema?  (?_?)
+get_terms(lda_discursos, 20)
+
+# Exportemos los resultados para poder hacer una linda tabla en markdown.
+write.table(
+    get_terms(lda_discursos, 20), 
+    "./temas-palabras-5thm.txt", 
+    sep = " | ", 
+    row.names = FALSE, 
+    col.names = FALSE,
+    quote = FALSE
+)
